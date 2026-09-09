@@ -24,6 +24,7 @@ python3 -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); n
 | Folder | Contents |
 | --- | --- |
 | `day1/` | `day1_tfidf.ipynb` and `news_dataset.csv` -- traditional NLP preprocessing (stopwords, lemmatization, n-grams) and a TF-IDF text classification model |
+| `day2/` | `day2_embeddings.ipynb` and `news_dataset.csv` -- pretrained GloVe word embeddings, semantic similarity, sentence embeddings, and IDF-weighted averaging |
 
 ## Day 1: Traditional NLP Basics
 
@@ -45,3 +46,33 @@ be strong, reliable signals within this specific dataset. Same theme as
 Week 2's XGBoost-loses-to-Gradient-Boosting and
 RandomizedSearchCV-picks-a-worse-model findings: a more sophisticated
 technique doesn't automatically win, especially on small data.
+
+## Day 2: Word Embeddings and Semantic Text Representation
+
+`day2/day2_embeddings.ipynb` uses pretrained GloVe vectors
+(`glove-wiki-gigaword-100`, 400K words, 100 dimensions each, trained by
+Stanford on Wikipedia + Gigaword) instead of training embeddings from
+scratch -- 278 rows isn't nearly enough data for that. Semantic similarity
+checks out immediately: "stock" is 85% similar to "shares", only 16%
+similar to "banana". Headlines get represented as sentence embeddings by
+averaging their words' vectors together, then classified the same way as
+Day 1.
+
+Results kept getting worse, not better, as more sophistication got added:
+
+| Approach | Accuracy |
+| --- | --- |
+| CountVectorizer (Day 1) | 71.4% |
+| TF-IDF (Day 1) | 62.5% |
+| Plain averaged GloVe | 58.9% |
+| IDF-weighted GloVe | 50.0% |
+
+IDF-weighted averaging (weighting each word's vector by how rare it is
+before averaging) made things *worse* than plain averaging -- the same
+exact pattern as Day 1's TF-IDF-loses-to-CountVectorizer finding, now
+showing up a second time. IDF estimates from only 222 documents are
+genuinely noisy on a corpus this small, and "rare" doesn't reliably mean
+"meaningful" here. Pretrained embeddings captured real semantic
+relationships convincingly, but that didn't translate into a better
+classifier on this small, narrow dataset -- simple word-presence signals
+keep winning.
