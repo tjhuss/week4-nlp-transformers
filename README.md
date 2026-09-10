@@ -25,6 +25,7 @@ python3 -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); n
 | --- | --- |
 | `day1/` | `day1_tfidf.ipynb` and `news_dataset.csv` -- traditional NLP preprocessing (stopwords, lemmatization, n-grams) and a TF-IDF text classification model |
 | `day2/` | `day2_embeddings.ipynb` and `news_dataset.csv` -- pretrained GloVe word embeddings, semantic similarity, sentence embeddings, and IDF-weighted averaging |
+| `day3/` | `day3_transformer_notes.md` -- conceptual notes walking through how a transformer processes one real headline (self-attention, Q/K/V, positional encoding, multi-head, encoder/decoder) |
 
 ## Day 1: Traditional NLP Basics
 
@@ -76,3 +77,16 @@ genuinely noisy on a corpus this small, and "rare" doesn't reliably mean
 relationships convincingly, but that didn't translate into a better
 classifier on this small, narrow dataset -- simple word-presence signals
 keep winning.
+
+## Day 3: Transformer Architecture
+
+`day3/day3_transformer_notes.md` is a written walkthrough (the deliverable
+is "Transformer notes", not code) tracing how a transformer processes one
+real headline from the dataset -- "Why Salesforce Stock Rallied Today" --
+through every stage: tokenization and embeddings, positional encoding (a
+patch for the fact that self-attention throws away word order),
+self-attention via Query/Key/Value, multi-head attention, the residual +
+feed-forward transformer block, and how encoders (BERT-style) differ from
+decoders (GPT-style). The core shift from Week 3's LSTM: no sequential
+chain and no fading memory -- every word gets direct parallel access to
+every other word in one step.
