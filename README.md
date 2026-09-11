@@ -27,6 +27,7 @@ python3 -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); n
 | `day2/` | `day2_embeddings.ipynb` and `news_dataset.csv` -- pretrained GloVe word embeddings, semantic similarity, sentence embeddings, and IDF-weighted averaging |
 | `day3/` | `day3_transformer_notes.md` -- conceptual notes walking through how a transformer processes one real headline (self-attention, Q/K/V, positional encoding, multi-head, encoder/decoder) |
 | `day4/` | `day4_bert.ipynb` and `news_dataset.csv` -- fine-tuning pretrained DistilBERT for the 6-way headline classification (the saved model is ~268MB so it's gitignored, it regenerates when the notebook runs) |
+| `day5/` | `day5_ner_pipeline.ipynb` and `news_dataset.csv` -- NER on our headlines, plus a QA demo, a summarization demo, and a raw BIO tagging demo |
 
 ## Day 1: Traditional NLP Basics
 
@@ -121,3 +122,31 @@ English and the task at once from 222 rows (impossible), while DistilBERT
 already knew English and only needed to learn which words point to which
 category. Fine-tuning a pretrained model is the right tool for a small
 dataset; training one from scratch is not.
+
+## Day 5: NER, QA, and Summarization
+
+`day5/day5_ner_pipeline.ipynb` picked NER as the main build since our
+headlines are full of entities and it's the most useful of the three in
+real work. added a small QA demo and a small summarization demo too since
+they fit in the same notebook, plus a raw BIO tagging demo since the main
+NER step hides the raw tags.
+
+three separate pipeline shortcuts (question-answering, summarization, and
+grouped_entities for NER) are all gone in this transformers version. had
+to rebuild each one directly with the underlying model class instead of
+the convenience wrapper. annoying at first but it forced seeing what each
+task actually does mechanically instead of hiding behind a shortcut.
+
+NER on our own headlines is a mixed bag. clean on generic names and
+companies (Elon Musk, AMD, Nvidia all near 100% confidence), but falls
+apart on financial specific stuff, S&P 500 got split weirdly, CoreWeave
+came back in two broken pieces, ETF got chopped down with lower
+confidence. same story as Day 4, this model was trained on old general
+news, not finance, so it's strong in general but needs fine-tuning to
+really work on a specific domain.
+
+BIO tagging turned up something not in the textbook version either. every
+tag came back as I- with zero B- tags anywhere, even on the very first
+piece of an entity. turns out that's a real quirk of this specific model,
+not a bug, the original CoNLL-2003 scheme barely ever needs a B- tag so
+the model learned it can skip it entirely.
