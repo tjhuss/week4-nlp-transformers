@@ -28,6 +28,7 @@ python3 -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); n
 | `day3/` | `day3_transformer_notes.md` -- conceptual notes walking through how a transformer processes one real headline (self-attention, Q/K/V, positional encoding, multi-head, encoder/decoder) |
 | `day4/` | `day4_bert.ipynb` and `news_dataset.csv` -- fine-tuning pretrained DistilBERT for the 6-way headline classification (the saved model is ~268MB so it's gitignored, it regenerates when the notebook runs) |
 | `day5/` | `day5_ner_pipeline.ipynb` and `news_dataset.csv` -- NER on our headlines, plus a QA demo, a summarization demo, and a raw BIO tagging demo |
+| `day6/` | `day6_llm_prompts.ipynb` -- decoder-only LLM architecture with GPT-2, prompt comparisons, and pretraining/instruction-tuning/RLHF notes |
 
 ## Day 1: Traditional NLP Basics
 
@@ -150,3 +151,25 @@ tag came back as I- with zero B- tags anywhere, even on the very first
 piece of an entity. turns out that's a real quirk of this specific model,
 not a bug, the original CoNLL-2003 scheme barely ever needs a B- tag so
 the model learned it can skip it entirely.
+
+## Day 6: LLM Architecture
+
+`day6/day6_llm_prompts.ipynb` closes out week 4. uses plain base GPT-2 (no
+instruction tuning, no RLHF) to actually show what that means instead of
+just defining it -- 124.4M parameters, 1024 token context window, decoder
+only, generates one token at a time seeing only what came before it.
+
+ran two prompts through it, a plain continuation and a question/answer
+style one, both with greedy decoding. both got stuck looping (volatile
+market / volatility of the market on the first, "it is not a perfect
+market" x3 on the second) instead of ever answering anything. phrasing it
+as a question didn't change that, proving the model has no real
+instruction-following behavior, it's still just predicting likely next
+words. that's the actual reason pretraining alone isn't enough and models
+need instruction tuning and RLHF on top of it, RLHF specifically isn't
+implemented here since it needs a trained reward model and large scale
+human preference data, way past a local exercise, but it's covered
+conceptually.
+
+week 4 done. week 5 starts with prompt engineering, local/API LLMs,
+fine-tuning concepts (LoRA/QLoRA), and building a RAG chatbot.
