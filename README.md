@@ -128,15 +128,16 @@ dataset; training one from scratch is not.
 
 `day5/day5_ner_pipeline.ipynb` picked NER as the main build since our
 headlines are full of entities and it's the most useful of the three in
-real work. added a small QA demo and a small summarization demo too since
-they fit in the same notebook, plus a raw BIO tagging demo since the main
-NER step hides the raw tags.
+real work. Added a small QA demo and a small summarization demo too
+since they fit in the same notebook, plus a raw BIO tagging demo since
+the main NER step hides the raw tags.
 
-three separate pipeline shortcuts (question-answering, summarization, and
-grouped_entities for NER) are all gone in this transformers version. had
-to rebuild each one directly with the underlying model class instead of
-the convenience wrapper. annoying at first but it forced seeing what each
-task actually does mechanically instead of hiding behind a shortcut.
+Three separate pipeline shortcuts (question-answering, summarization,
+and grouped_entities for NER) are all gone in this transformers
+version. Had to rebuild each one directly with the underlying model
+class instead of the convenience wrapper. Annoying at first, but it
+forced seeing what each task actually does mechanically instead of
+hiding behind a shortcut.
 
 NER on our own headlines is a mixed bag. clean on generic names and
 companies (Elon Musk, AMD, Nvidia all near 100% confidence), but falls
@@ -154,22 +155,23 @@ the model learned it can skip it entirely.
 
 ## Day 6: LLM Architecture
 
-`day6/day6_llm_prompts.ipynb` closes out week 4. uses plain base GPT-2 (no
-instruction tuning, no RLHF) to actually show what that means instead of
-just defining it -- 124.4M parameters, 1024 token context window, decoder
-only, generates one token at a time seeing only what came before it.
+`day6/day6_llm_prompts.ipynb` closes out Week 4. Uses plain base GPT-2
+(no instruction tuning, no RLHF) to actually show what that means
+instead of just defining it -- 124.4M parameters, 1024 token context
+window, decoder only, generates one token at a time seeing only what
+came before it.
 
-ran two prompts through it, a plain continuation and a question/answer
-style one, both with greedy decoding. both got stuck looping (volatile
+Ran two prompts through it, a plain continuation and a question/answer
+style one, both with greedy decoding. Both got stuck looping (volatile
 market / volatility of the market on the first, "it is not a perfect
-market" x3 on the second) instead of ever answering anything. phrasing it
-as a question didn't change that, proving the model has no real
+market" x3 on the second) instead of ever answering anything. Phrasing
+it as a question didn't change that, proving the model has no real
 instruction-following behavior, it's still just predicting likely next
-words. that's the actual reason pretraining alone isn't enough and models
-need instruction tuning and RLHF on top of it, RLHF specifically isn't
-implemented here since it needs a trained reward model and large scale
-human preference data, way past a local exercise, but it's covered
-conceptually.
+words. That's the actual reason pretraining alone isn't enough and
+models need instruction tuning and RLHF on top of it, RLHF
+specifically isn't implemented here since it needs a trained reward
+model and large scale human preference data, way past a local
+exercise, but it's covered conceptually.
 
-week 4 done. week 5 starts with prompt engineering, local/API LLMs,
+Week 4 done. Week 5 starts with prompt engineering, local/API LLMs,
 fine-tuning concepts (LoRA/QLoRA), and building a RAG chatbot.
